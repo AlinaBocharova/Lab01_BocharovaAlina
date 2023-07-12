@@ -1,6 +1,4 @@
-package src.lab1;
-
-import src.lab1.Calculation;
+package src.calc;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

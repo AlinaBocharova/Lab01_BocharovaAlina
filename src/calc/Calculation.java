@@ -1,4 +1,4 @@
-package src.lab1;
+package src.calc;
 
 public class Calculation {
     protected static int plus (int numberOne, int numberTwo){
