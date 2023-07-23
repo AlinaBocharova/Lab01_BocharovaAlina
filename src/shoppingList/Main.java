@@ -1,40 +1,62 @@
 package src.shoppingList;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main (String[] args){
         Scanner sc = new Scanner(System.in);
-        int count = 0;
+        TreeMap<String, TreeMap<String, Integer>> clients = new TreeMap<String, TreeMap <String, Integer>>();
 
         String [] masOfProducts = new String[5];
         Integer [] masOfCosts = new Integer [5];
         Integer[] masOfCounts = new Integer[5];
 
-        while (sc.hasNext() && count < 5){
+        while (sc.hasNext()) {
             String s = sc.nextLine();
-
-            if ("exit".equals(s)){
+            if ("exit".equals(s)) {
                 break;
             }
 
-            count++;
+            TreeMap<String, Integer> value = null;
+            for (Map.Entry<String, TreeMap<String, Integer>> entry : clients.entrySet()) {
+                String key = entry.getKey();
+                value = entry.getValue();
+                System.out.println(key + ":");
+            }
+
+            for (Map.Entry<String, Integer> product : value.entrySet()) {
+                String keyProduct = product.getKey();
+                Integer valueProduct = product.getValue();
+
+                System.out.println(keyProduct + " " + valueProduct);
+            }
+
             String[] parts = s.split(" ");
 
-            if(parts.length != 3){
-                System.out.println("Wrong number of arguments! Retry!");
-                continue;
-            }
+            String name = parts[0];
+            Integer count = Integer.parseInt(parts[2]);
 
             String productName = parts[0];
             Integer productCost = Integer.parseInt(parts[1]);
             Integer productCount = Integer.parseInt(parts[2]);
+
+            if (parts.length != 3) {
+                System.out.println("Wrong number of arguments! Retry!");
+                continue;
+            }
+
+            if (!clients.containsKey(name))
+                clients.put(name, new TreeMap<String, Integer>());
+            TreeMap<String, Integer> temp = clients.get(name);
+            if (!temp.containsKey(productName))
+                temp.put(productName, 0);
+            Integer oldCount = temp.get(productName);
+            temp.put(productName, oldCount + count);
+
             try {
                 productCost = Integer.parseInt(parts[1]);
                 productCount = Integer.parseInt(parts[2]);
-            } catch (NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 System.out.println(ex.getMessage());
                 System.out.println("Retry!");
                 continue;
@@ -42,16 +64,16 @@ public class Main {
 
             boolean productAlreadyExists = false;
             for (int i = 0; i < 5; i++) {
-                if (productName.equals(masOfProducts[i])){
+                if (productName.equals(masOfProducts[i])) {
                     masOfCosts[i] = productCost;
                     masOfCounts[i] += productCount;
                     productAlreadyExists = true;
                 }
             }
 
-            if (!productAlreadyExists){
+            if (!productAlreadyExists) {
                 for (int i = 0; i < 5; i++) {
-                    if (masOfProducts == null){
+                    if (masOfProducts == null) {
                         masOfProducts[i] = productName;
                         masOfCosts[i] = productCost;
                         masOfCounts[i] = productCount;
